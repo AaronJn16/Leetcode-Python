@@ -1,4 +1,4 @@
-Construct K Palindrome Strings
+# Construct K Palindrome Strings
 
 class Solution:
   def canConstruct(self, s: str, k: int) -> bool:
