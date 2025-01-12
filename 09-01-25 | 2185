@@ -1,4 +1,4 @@
-Counting Words With a Given Prefix
+# Counting Words With a Given Prefix
 
 class Solution:
   def prefixCount(self, words: list[str], pref: str) -> int:
