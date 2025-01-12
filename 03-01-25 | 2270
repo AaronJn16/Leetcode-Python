@@ -1,4 +1,4 @@
-Number of Ways to Split Array
+# Number of Ways to Split Array
 
 class Solution:
   def waysToSplitArray(self, nums: list[int]) -> int:
