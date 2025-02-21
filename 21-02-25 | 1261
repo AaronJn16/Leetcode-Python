@@ -1,0 +1,20 @@
+# Find Elements in a Contaminated Binary Tree
+
+class FindElements:
+    def __init__(self, root: Optional[TreeNode]):
+        def dfs(root):
+            self.vis.add(root.val)
+            if root.left:
+                root.left.val = root.val * 2 + 1
+                dfs(root.left)
+            if root.right:
+                root.right.val = root.val * 2 + 2
+                dfs(root.right)
+
+        root.val = 0
+        self.vis = set()
+        dfs(root)
+
+    def find(self, target: int) -> bool:
+        return target in self.vis
+        
