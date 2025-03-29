@@ -1,0 +1,70 @@
+# Apply Operations to Maximize Score
+
+from heapq import heappush, heappop
+from collections import defaultdict
+from math import isqrt
+
+MOD = 10**9 + 7
+
+class Solution:
+    def maximumScore(self, nums, k):
+        n = len(nums)
+        max_num = max(nums)
+        
+        # Step 1: Compute smallest prime factors using Sieve of Eratosthenes
+        spf = list(range(max_num + 1))
+        for i in range(2, isqrt(max_num) + 1):
+            if spf[i] == i:  # i is a prime number
+                for j in range(i * i, max_num + 1, i):
+                    if spf[j] == j:
+                        spf[j] = i
+        
+        # Step 2: Calculate prime scores
+        def prime_score(x):
+            factors = set()
+            while x != 1:
+                factors.add(spf[x])
+                x //= spf[x]
+            return len(factors)
+        
+        prime_scores = [prime_score(num) for num in nums]
+        
+        # Step 3: Determine valid subarray ranges
+        left = [-1] * n
+        right = [n] * n
+        stack = []
+        
+        # Find previous greater or equal element for each position
+        for i in range(n):
+            while stack and prime_scores[stack[-1]] < prime_scores[i]:
+                stack.pop()
+            if stack:
+                left[i] = stack[-1]
+            stack.append(i)
+        
+        stack = []
+        # Find next greater element for each position
+        for i in range(n - 1, -1, -1):
+            while stack and prime_scores[stack[-1]] <= prime_scores[i]:
+                stack.pop()
+            if stack:
+                right[i] = stack[-1]
+            stack.append(i)
+        
+        # Step 4: Use a max-heap to prioritize elements
+        max_heap = []
+        for i in range(n):
+            count = (i - left[i]) * (right[i] - i)
+            heappush(max_heap, (-nums[i], prime_scores[i], count))
+        
+        # Step 5: Compute the maximum score
+        score = 1
+        while k > 0 and max_heap:
+            value, p_score, count = heappop(max_heap)
+            value = -value
+            use = min(k, count)
+            score = (score * pow(value, use, MOD)) % MOD
+            k -= use
+        
+        return score
+     
